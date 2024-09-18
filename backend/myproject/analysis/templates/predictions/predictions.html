@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predictions</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5; /* Light grey background */
+            color: #333; /* Dark grey text color */
+        }
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #ffffff; /* White background for the container */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            position: relative;
+        }
+        .form-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9; /* Slightly grey background for the form area */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+        h1, h2 {
+            color: #007bff; /* Blue color for headings */
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        select, button {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc; /* Light grey border */
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        select {
+            background-color: #ffffff; /* White background for select box */
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff; /* Blue background for buttons */
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+        .table-container {
+            position: relative;
+            overflow-x: auto; /* Allow horizontal scrolling for tables */
+        }
+        .table-wrapper {
+            position: relative;
+        }
+        .table-header {
+            position: sticky;
+            top: 0;
+            background-color: #007bff; /* Blue background for sticky header */
+            color: white;
+            z-index: 1; /* Make sure header is above table rows */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #ffffff; /* White background for the table */
+            border-radius: 8px; /* Rounded corners */
+            overflow: hidden; /* Hide any overflow for rounded corners */
+        }
+        th, td {
+            border: 1px solid #ddd; /* Light grey border */
+            padding: 12px;
+            text-align: left;
+            word-wrap: break-word; /* Wrap long words in table cells */
+        }
+        th {
+            background-color: #007bff; /* Blue background for header */
+            color: white;
+        }
+        tbody tr:nth-child(odd) {
+            background-color: #f9f9f9; /* Alternate row colors */
+        }
+        tbody tr:hover {
+            background-color: #f1f1f1; /* Light grey background on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Back to Home Button -->
+        <a href="{% url 'home' %}" class="back-button">Back to Home</a>
+
+        <h1>Predictions</h1>
+
+        <div class="form-container">
+            <form method="post" action="{% url 'predictions' %}">
+                {% csrf_token %}
+                <label for="selected_id">Select Motor ID:</label>
+                <select name="selected_id" id="selected_id">
+                    {% for id in ids %}
+                        <option value="{{ id }}" {% if id == selected_id %}selected{% endif %}>{{ id }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="button">Display Predictions</button>
+            </form>
+        </div>
+
+        {% if has_data %}
+            <h2>Predictions for Motor ID: {{ selected_id }}</h2>
+            <div class="table-container">
+                <div class="table-wrapper">
+                    <div class="table-header">
+                        <table>
+                            <thead>
+                                <tr>
+                                    {% for column in transformed_df.columns %}
+                                        <th>{{ column }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <table>
+                        <tbody>
+                            {% for row in transformed_df.values %}
+                                <tr>
+                                    {% for cell in row %}
+                                        <td>{{ cell }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

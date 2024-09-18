@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis View</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5; /* Light grey background */
+            color: #333; /* Dark grey text color */
+        }
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #ffffff; /* White background for the container */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            position: relative;
+        }
+        .form-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9; /* Slightly grey background for the form area */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+        h1, h2 {
+            color: #007bff; /* Blue color for headings */
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        select, button {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc; /* Light grey border */
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        select {
+            background-color: #ffffff; /* White background for select box */
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff; /* Blue background for buttons */
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #ffffff; /* White background for the table */
+            border-radius: 8px; /* Rounded corners */
+            overflow: hidden; /* Hide any overflow for rounded corners */
+        }
+        th, td {
+            border: 1px solid #ddd; /* Light grey border */
+            padding: 12px;
+            text-align: left;
+            word-wrap: break-word; /* Wrap long words in table cells */
+        }
+        th {
+            background-color: #007bff; /* Blue background for header */
+            color: white;
+        }
+        tbody tr:nth-child(odd) {
+            background-color: #f9f9f9; /* Alternate row colors */
+        }
+        tbody tr:hover {
+            background-color: #f1f1f1; /* Light grey background on hover */
+        }
+        .plot-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Back to Home Button -->
+        <a href="{% url 'home' %}" class="back-button">Back to Home</a>
+
+        <h1>Analysis View</h1>
+
+        <!-- Form for selecting ID and number of entries -->
+        <div class="form-container">
+            <form method="post" action="{% url 'data_analysis' %}" id="fetch-entries-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="fetch_entries">
+                
+                <label for="selected_id">Select ID:</label>
+                <select name="selected_id" id="selected_id">
+                    <option value="">--Select ID--</option>
+                    {% for id in ids %}
+                        <option value="{{ id }}" {% if id == selected_id %}selected{% endif %}>{{ id }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="num_entries">Number of Entries:</label>
+                <select name="num_entries" id="num_entries">
+                    <option value="10" {% if num_entries == 10 %}selected{% endif %}>10</option>
+                    <option value="20" {% if num_entries == 20 %}selected{% endif %}>20</option>
+                    <option value="50" {% if num_entries == 50 %}selected{% endif %}>50</option>
+                </select>
+
+                <button type="submit">Fetch Entries</button>
+            </form>
+        </div>
+
+        <!-- Display the fetched data table -->
+        {% if entries %}
+        <h2>Entries</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cycle</th>
+                    <th>Setting1</th>
+                    <th>Setting2</th>
+                    <th>Setting3</th>
+                    <th>s1</th>
+                    <th>s2</th>
+                    <th>s3</th>
+                    <th>s4</th>
+                    <th>s5</th>
+                    <th>s6</th>
+                    <th>s7</th>
+                    <th>s8</th>
+                    <th>s9</th>
+                    <th>s10</th>
+                    <th>s11</th>
+                    <th>s12</th>
+                    <th>s13</th>
+                    <th>s14</th>
+                    <th>s15</th>
+                    <th>s16</th>
+                    <th>s17</th>
+                    <th>s18</th>
+                    <th>s19</th>
+                    <th>s20</th>
+                    <th>s21</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                <tr>
+                    <td>{{ entry.id }}</td>
+                    <td>{{ entry.cycle }}</td>
+                    <td>{{ entry.setting1 }}</td>
+                    <td>{{ entry.setting2 }}</td>
+                    <td>{{ entry.setting3 }}</td>
+                    <td>{{ entry.s1 }}</td>
+                    <td>{{ entry.s2 }}</td>
+                    <td>{{ entry.s3 }}</td>
+                    <td>{{ entry.s4 }}</td>
+                    <td>{{ entry.s5 }}</td>
+                    <td>{{ entry.s6 }}</td>
+                    <td>{{ entry.s7 }}</td>
+                    <td>{{ entry.s8 }}</td>
+                    <td>{{ entry.s9 }}</td>
+                    <td>{{ entry.s10 }}</td>
+                    <td>{{ entry.s11 }}</td>
+                    <td>{{ entry.s12 }}</td>
+                    <td>{{ entry.s13 }}</td>
+                    <td>{{ entry.s14 }}</td>
+                    <td>{{ entry.s15 }}</td>
+                    <td>{{ entry.s16 }}</td>
+                    <td>{{ entry.s17 }}</td>
+                    <td>{{ entry.s18 }}</td>
+                    <td>{{ entry.s19 }}</td>
+                    <td>{{ entry.s20 }}</td>
+                    <td>{{ entry.s21 }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="25">No data available</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        <!-- Form for selecting IDs and sensors for plotting -->
+        <div class="form-container">
+            <form method="post" action="{% url 'data_analysis' %}" id="generate-plots-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="generate_plots">
+                
+                <h2>Select IDs and Sensors for Plotting</h2>
+                
+                <!-- Selection box for the first ID -->
+                <label for="plot_id1">Select First ID:</label>
+                <select id="plot_id1" name="plot_id1">
+                    <option value="">--Select ID--</option>
+                    {% for id in ids %}
+                        <option value="{{ id }}" {% if id == selected_id1 %}selected{% endif %}>{{ id }}</option>
+                    {% endfor %}
+                </select>
+
+                <!-- Selection box for the second ID -->
+                <label for="plot_id2">Select Second ID:</label>
+                <select id="plot_id2" name="plot_id2">
+                    <option value="">--Select ID--</option>
+                    {% for id in ids %}
+                        <option value="{{ id }}" {% if id == selected_id2 %}selected{% endif %}>{{ id }}</option>
+                    {% endfor %}
+                </select>
+
+                <!-- Selection box for the first sensor -->
+                <label for="plot_sensor1">Select First Sensor:</label>
+                <select id="plot_sensor1" name="plot_sensor1">
+                    <option value="">--Select Sensor--</option>
+                    {% for column in columns %}
+                        <option value="{{ column }}" {% if column == selected_sensor1 %}selected{% endif %}>{{ column }}</option>
+                    {% endfor %}
+                </select>
+
+                <!-- Selection box for the second sensor -->
+                <label for="plot_sensor2">Select Second Sensor:</label>
+                <select id="plot_sensor2" name="plot_sensor2">
+                    <option value="">--Select Sensor--</option>
+                    {% for column in columns %}
+                        <option value="{{ column }}" {% if column == selected_sensor2 %}selected{% endif %}>{{ column }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit">Generate Plots</button>
+            </form>
+        </div>
+
+        <!-- Display the generated plots -->
+        {% if plots %}
+        <div class="plot-container">
+            <h2>Generated Plots</h2>
+            {% for plot in plots %}
+                <div>{{ plot|safe }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <p style="color: red;">{{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar View</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5; /* Light grey background */
+            color: #333; /* Dark grey text color */
+        }
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #ffffff; /* White background for the container */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            position: relative;
+        }
+        .form-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9; /* Slightly grey background for the form area */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+        h1, h2 {
+            color: #007bff; /* Blue color for headings */
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="date"], textarea, button {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc; /* Light grey border */
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        select {
+            background-color: #ffffff; /* White background for select box */
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff; /* Blue background for buttons */
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+        .success {
+            color: green;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #ffffff; /* White background for the table */
+            border-radius: 8px; /* Rounded corners */
+            overflow: hidden; /* Hide any overflow for rounded corners */
+        }
+        th, td {
+            border: 1px solid #ddd; /* Light grey border */
+            padding: 12px;
+            text-align: left;
+            word-wrap: break-word; /* Wrap long words in table cells */
+        }
+        th {
+            background-color: #007bff; /* Blue background for header */
+            color: white;
+        }
+        tbody tr:nth-child(odd) {
+            background-color: #f9f9f9; /* Alternate row colors */
+        }
+        tbody tr:hover {
+            background-color: #f1f1f1; /* Light grey background on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Back to Home Button -->
+        <a href="{% url 'home' %}" class="back-button">Back to Home</a>
+
+        <h1>Calendar Entry</h1>
+
+        <div class="form-container">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" name="save_entry" class="button">Save</button>
+                <button type="submit" name="display_events" class="button">Display Events</button>
+            </form>
+        </div>
+
+        {% if messages %}
+            <div>
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        <p class="success">{{ message }}</p>
+                    {% elif message.tags == 'error' %}
+                        <p class="error">{{ message }}</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if events %}
+            <h2>Saved Events</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date Time</th>
+                        <th>Motor ID</th>
+                        <th>Entry Text</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                        <tr>
+                            <td>{{ event.date_time }}</td>
+                            <td>{{ event.motor_id }}</td>
+                            <td>{{ event.entry_text }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3">No events found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</body>
+</html>
